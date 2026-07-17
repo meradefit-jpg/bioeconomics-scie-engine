@@ -11,7 +11,7 @@ def run_bioeconomic_model(historique: list[TimeSeriesPoint], eco: EconomicVariab
     efforts_safe = np.where(efforts == 0, 1e-9, efforts)
     cpue = captures / efforts_safe
     
-    p = eco.prix_kg
+    p = eco.prix_kg * 1000
     c = eco.cout_effort
 
     # Variables pour stocker les prédictions (pour le calcul du R²)
