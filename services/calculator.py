@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.optimize import fsolve
 from models.schemas import TimeSeriesPoint, EconomicVariables, ReferencePoints, SimulationPoint
+from services.ai_model import predire_interpretation_ia
 
 def run_bioeconomic_model(historique: list[TimeSeriesPoint], eco: EconomicVariables, modele: str):
     # 1. Extraction et préparation des données
@@ -124,11 +125,26 @@ def run_bioeconomic_model(historique: list[TimeSeriesPoint], eco: EconomicVariab
     else:
         diagnostic = "Surexploitation (Effort actuel critique, supérieur au MSY)"
 
-    # Retour avec le R² ajouté
-    return {
+    # Calcul des variables requises pour le modèle de classification
+    dernier_effort = float(efforts[-1])
+    dernier_profit = float(points_sim[-1].profit_estime) # Profit basé sur le dernier état
+    cout_total_flotte = float(c * dernier_effort)
+
+    output = {
         "selected_model": modele.lower(),
         "r_squared": r_squared,
         "diagnostic": diagnostic,
         "points_reference": refs,
         "points_simulation": points_sim
     }
+    
+    # Appel de la prédiction du modèle de Machine Learnig local
+    output["interpretation_ia"] = predire_interpretation_ia(
+        r_squared=r_squared,
+        effort_actuel=dernier_effort,
+        f_msy=f_msy,
+        profit=dernier_profit,
+        cout_total=cout_total_flotte
+    )
+
+    return output
