@@ -15,8 +15,9 @@ def run_bioeconomic_model(historique: list[TimeSeriesPoint], eco: EconomicVariab
     p = eco.prix_kg * 1000
     c = eco.cout_effort
 
-    # Variables pour stocker les prédictions (pour le calcul du R²)
-    captures_estimees_historiques = []
+    # Variables pour stocker les prédictions (pour le calcul du R² linéaire)
+    valeurs_reelles_regression = []
+    valeurs_predites_regression = []
 
     # 2. Choix du modèle et Régressions
     if modele.lower() == "fox":
@@ -54,8 +55,9 @@ def run_bioeconomic_model(historique: list[TimeSeriesPoint], eco: EconomicVariab
         else:
             f_oa = 0
 
-        # Données pour R²
-        captures_estimees_historiques = calc_capture_estimee(efforts)
+        # Données pour R² (Modèle Linéaire Fox)
+        valeurs_reelles_regression = ln_cpue
+        valeurs_predites_regression = c_fox - (d_fox * efforts)
 
     else:
         # Modèle de Schaefer (Par défaut) : CPUE = a - b * E
@@ -79,12 +81,13 @@ def run_bioeconomic_model(historique: list[TimeSeriesPoint], eco: EconomicVariab
         def calc_capture_estimee(e):
             return (a * e) - (b * (e**2))
 
-        # Données pour R²
-        captures_estimees_historiques = calc_capture_estimee(efforts)
+        # Données pour R² (Modèle Linéaire Schaefer)
+        valeurs_reelles_regression = cpue
+        valeurs_predites_regression = a - (b * efforts)
 
     # 3. Validation Scientifique : Calcul du R² (Coefficient de détermination)
-    ss_res = np.sum((captures - captures_estimees_historiques) ** 2)
-    ss_tot = np.sum((captures - np.mean(captures)) ** 2)
+    ss_res = np.sum((valeurs_reelles_regression - valeurs_predites_regression) ** 2)
+    ss_tot = np.sum((valeurs_reelles_regression - np.mean(valeurs_reelles_regression)) ** 2)
     r_squared = 1 - (ss_res / ss_tot) if ss_tot != 0 else 0
     r_squared = round(float(r_squared), 4)
 
