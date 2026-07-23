@@ -11,8 +11,6 @@ class TimeSeriesPoint(BaseModel):
 class EconomicVariables(BaseModel):
     prix_kg: float
     cout_effort: float
-    variation_prix_pct: float = 0.0
-    variation_cout_pct: float = 0.0
     
 class SimulationRequest(BaseModel):
     historique: List[TimeSeriesPoint]
