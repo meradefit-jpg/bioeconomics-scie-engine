@@ -10,9 +10,9 @@ y_train_r2 = np.array([2, 2, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0])
 
 # Nouvelles définitions avec balises dynamiques
 DICTIONNAIRE_R2 = {
-    2: "Validation Scientifique (IA) : Ajustement mathématique excellent ({r2}%). La corrélation historique garantit une haute fiabilité aux points de référence pour guider les décisions.",
-    1: "Validation Scientifique (IA) : Ajustement mathématique modéré ({r2}%). Le modèle explique globalement la dynamique, mais l'analyse appelle à une vigilance sur le terrain.",
-    0: "Alerte Scientifique (IA) : Qualité d'ajustement insuffisante ({r2}%). Les captures ne dépendent pas que de l'effort; les résultats doivent être manipulés avec une extrême réserve."
+    2: "Validation Scientifique : Ajustement mathématique excellent ({r2}%). La corrélation historique garantit une haute fiabilité aux points de référence pour guider les décisions.",
+    1: "Validation Scientifique : Ajustement mathématique modéré ({r2}%). Le modèle explique globalement la dynamique, mais l'analyse appelle à une vigilance sur le terrain.",
+    0: "Alerte Scientifique : Qualité d'ajustement insuffisante ({r2}%). Les captures ne dépendent pas que de l'effort; les résultats doivent être manipulés avec une extrême réserve."
 }
 clf_r2 = DecisionTreeClassifier(random_state=42, max_depth=3).fit(X_train_r2, y_train_r2)
 
