@@ -119,7 +119,6 @@ def predire_interpretation_ia(r_squared: float, effort_actuel: float, f_msy: flo
     # Assemblage final compact
     rapport_final = (
         f"{texte_r2}\n\n"
-        f"Analyse Générée par l'IA :\n"
         f"• {texte_msy}\n"
         f"• {texte_mse}\n"
         f"• {texte_action}"
