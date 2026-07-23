@@ -79,11 +79,21 @@ def predire_interpretation_ia(r_squared: float, effort_actuel: float, f_msy: flo
     X_test_r2 = np.array([[r_squared]])
     classe_r2 = int(clf_r2.predict(X_test_r2)[0])
     
-    # 2. Préparation des variables intermédiaires
+    # 2. Préparation des variables intermédiaires (avec gestion des coûts nuls)
     ratio_effort = float(effort_actuel / f_msy) if f_msy > 0 else 1.0
-    ratio_profit = float(profit / cout_total) if cout_total > 0 else 0.0
     recettes = profit + cout_total
-    marge_nette = float(profit / recettes) if recettes > 0 else -1.0
+
+    # Prise en compte sécurisée des coûts nuls (c = 0)
+    if cout_total > 0:
+        ratio_profit = float(profit / cout_total)
+    else:
+        ratio_profit = 1.0 if profit > 0 else 0.0
+
+    if recettes > 0:
+        marge_nette = float(profit / recettes)
+    else:
+        marge_nette = -1.0 if profit < 0 else 0.0
+
     diff_effort = abs(effort_actuel - f_msy)
     
     # 3. Agent Halieutique
