@@ -128,9 +128,13 @@ def run_bioeconomic_model(historique: list[TimeSeriesPoint], eco: EconomicVariab
     else:
         diagnostic = "Surexploitation (Effort actuel critique, supérieur au MSY)"
 
-    # Calcul des variables requises pour le modèle de classification
+    # Calcul des variables requises pour le modèle de classification (sur l'effort ACTUEL)
     dernier_effort = float(efforts[-1])
-    dernier_profit = float(points_sim[-1].profit_estime) # Profit basé sur le dernier état
+    y_dernier = calc_capture_estimee(dernier_effort)
+    if y_dernier < 0:
+        y_dernier = 0.0
+        
+    dernier_profit = float((p * y_dernier) - (c * dernier_effort))
     cout_total_flotte = float(c * dernier_effort)
 
     output = {
